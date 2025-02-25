@@ -1,15 +1,13 @@
 pipeline {
- agent any
-  options {
-    buildDiscarder(logRotator(numToKeepStr: '5'))
-  }
-  stages {
-    stage('Scan') {
-      steps {
-        withSonarQubeEnv(installationName: 'sq1') { 
-           sh './mvnw clean verify sonar:sonar -Dsonar.host.url=http://so-sonarqube-1:9000'
-        }
-      }
+    agent any
+    tools {
+        jdk 'jdk-17' // Make sure the JDK version name matches the one in Jenkins' Global Tool Configuration
     }
-  }
+    stages {
+        stage('Build') {
+            steps {
+                sh './mvnw clean verify sonar:sonar -Dsonar.host.url=http://so-sonarqube-1:9000'
+            }
+        }
+    }
 }
